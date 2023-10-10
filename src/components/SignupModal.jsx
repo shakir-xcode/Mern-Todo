@@ -1,8 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
+import { signUpUser } from "../api/authentication";
 
-const SignupModal = () => {
+const SignupModal = ({ toggleLoadingModal }) => {
+  const [signUpInfo, setSignUpInfo] = useState({
+    email: "",
+    username: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setSignUpInfo((pre) => ({ ...pre, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
   const handleSignup = () => {
-    alert("hello");
+    // alert(JSON.stringify(signUpInfo));
+    // toggleLoadingModal();
+    signUpUser(signUpInfo);
+    // setIsLoggedIn(true);
+    // setUser({
+    //   email: "abc@gamil.com",
+    //   username: "shakir_08",
+    // });
   };
 
   return (
@@ -11,7 +33,7 @@ const SignupModal = () => {
     <dialog id="my_modal_signup" className="modal modal-bottom sm:modal-middle">
       <div className="modal-box">
         <form method="dialog">
-          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 ">
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 ">
             ✕
           </button>
         </form>
@@ -22,21 +44,38 @@ const SignupModal = () => {
         <div className="modal-action">
           <div className=" flex flex-col gap-4 w-full items-center">
             {/* if there is a button in form, it will close the modal */}
-            <input
-              type="email"
-              placeholder="Email"
-              className="input input-bordered input-primary w-full max-w-xs "
-            />
-            <input
-              type="text"
-              placeholder="Username"
-              className="input input-bordered input-primary w-full max-w-xs"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              className="input input-bordered input-primary w-full max-w-xs"
-            />
+            <form
+              className="flex flex-col gap-4 items-center w-full"
+              method="dialog"
+            >
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                autoComplete="email"
+                value={setSignUpInfo.email}
+                onChange={handleChange}
+                className="input input-bordered input-primary w-full max-w-xs "
+              />
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                autoComplete="username"
+                value={setSignUpInfo.username}
+                onChange={handleChange}
+                className="input input-bordered input-primary w-full max-w-xs"
+              />
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                autoComplete="current-password"
+                value={setSignUpInfo.password}
+                onChange={handleChange}
+                className="input input-bordered input-primary w-full max-w-xs"
+              />
+            </form>
             <button
               onClick={handleSignup}
               className="font-semibold input input-primary btn-primary w-full max-w-xs cursor-pointer "

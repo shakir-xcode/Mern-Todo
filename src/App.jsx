@@ -1,28 +1,25 @@
-import React, { useState, createContext } from "react";
+import React from "react";
 import Home from "./pages/Home";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import SignupModal from "./components/SignupModal";
 import LoginModal from "./components/LoginModal";
 import AddTaskModal from "./components/AddTaskModal";
-
-export const LoginContext = createContext();
+import { AuthProvider } from "./context/AuthContext";
+import { TaskProvider } from "./context/TaskContext";
+import UpdateTaskModal from "./components/UpdateTaskModal";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   return (
-    <BrowserRouter>
-      <LoginContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <AuthProvider>
+      <TaskProvider>
         <SignupModal />
         <LoginModal />
         <AddTaskModal />
+        <UpdateTaskModal />
         <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </LoginContext.Provider>
-    </BrowserRouter>
+        <Home />
+      </TaskProvider>
+    </AuthProvider>
   );
 }
 

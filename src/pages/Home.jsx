@@ -1,24 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import deleteIcon from "../assets/delete_icon.svg";
 import editIcon from "../assets/edit_icon.svg";
+import useAuth from "../context/AuthContext";
+import { initializeAuth } from "../api/authentication";
+import { initializeTask } from "../api/taskApi";
+import { useTask } from "../context/TaskContext";
+import { getAllTasks } from "../api/taskApi";
 
 const Home = () => {
+  const authCon = useAuth();
+  initializeAuth(authCon);
+
+  const taskCon = useTask();
+  initializeTask(taskCon);
+
+  console.log("updating task === ", taskCon.updatingTask);
+
   const taskList = [
-    "go to gym",
-    "watch movie",
-    "study",
-    "go to gym",
-    "watch movie",
-    "go to gym",
-    "watch movie",
-    "go to gym",
-    "watch movie",
-    "go to gym",
+    // "go to gym",
+    // "watch movie",
+    // "study",
+    // "go to gym",
+    // "watch movie",
+    // "go to gym",
+    // "watch movie",
+    // "go to gym",
+    // "watch movie",
+    // "go to gym",
   ];
 
   const handleEdit = () => {};
 
   const handleDelete = () => {};
+
+  useEffect(() => {
+    // initializeAuth(useAuth());
+    getAllTasks(authCon.user._id);
+  }, []);
 
   return (
     <div className=" ">
@@ -27,47 +45,60 @@ const Home = () => {
           onClick={() =>
             document.getElementById("my_modal_addTask").showModal()
           }
-          class="btn btn-outline btn-primary"
+          className="btn btn-outline btn-primary"
         >
           Add Task
         </button>
         <div className=" overflow-y-scroll scrollbar-hide w-full h-full mx-auto my-5">
-          {taskList.map((item, index) => {
-            return (
-              <div key={index} className="my-3">
-                <div
-                  tabindex="0"
-                  class="collapse collapse-arrow border border-base-300 bg-base-200"
-                >
-                  <div class="collapse-title text-xl font-medium flex justify-between">
-                    <p>{item}</p>
-                  </div>
-                  <div class="collapse-content flex flex-col gap-2">
-                    <p>
-                      tabindex="0" attribute is necessary to make the div
-                      focusable
-                    </p>
-                    <span className=" self-end">
-                      <img
-                        onClick={handleEdit}
-                        title="edit task"
-                        className="w-5 inline cursor-pointer"
-                        src={editIcon}
-                        alt="edit icon"
-                      />
-                      <img
-                        onClick={handleDelete}
-                        title="delete task"
-                        className="w-5 inline ml-3 cursor-pointer"
-                        src={deleteIcon}
-                        alt="delete icon"
-                      />
-                    </span>
+          {taskCon.myTasks.length !== 0 ? (
+            taskCon.myTasks.map((item) => {
+              return (
+                <div key={item._id} className="my-3">
+                  <div
+                    tabIndex="0"
+                    className="collapse collapse-arrow border border-base-300 bg-base-200"
+                  >
+                    <div className="collapse-title text-xl font-medium flex justify-between">
+                      <p>{item.title}</p>
+                    </div>
+                    <div className="collapse-content flex flex-col gap-2">
+                      <p>
+                        {item.body} <span>{item._id}</span>
+                      </p>
+                      <span className=" self-end">
+                        <img
+                          onClick={() => {
+                            taskCon.setUpdatingTask({
+                              id: item._id,
+                              title: item.title,
+                              body: item.body,
+                              email: authCon.user.email,
+                            });
+                            document
+                              .getElementById("my_modal_updateTask")
+                              .showModal();
+                          }}
+                          title="edit task"
+                          className="w-5 inline cursor-pointer"
+                          src={editIcon}
+                          alt="edit icon"
+                        />
+                        <img
+                          onClick={handleDelete}
+                          title="delete task"
+                          className="w-5 inline ml-3 cursor-pointer"
+                          src={deleteIcon}
+                          alt="delete icon"
+                        />
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          ) : (
+            <h2 className="text-2xl text-center font-semibold">No Tasks Yet</h2>
+          )}
         </div>
       </div>
     </div>
