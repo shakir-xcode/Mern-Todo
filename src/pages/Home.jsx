@@ -3,9 +3,13 @@ import deleteIcon from "../assets/delete_icon.svg";
 import editIcon from "../assets/edit_icon.svg";
 import useAuth from "../context/AuthContext";
 import { initializeAuth } from "../api/authentication";
-import { initializeTask } from "../api/taskApi";
+import { initializeTask, deleteTask } from "../api/taskApi";
 import { useTask } from "../context/TaskContext";
 import { getAllTasks } from "../api/taskApi";
+import SignupModal from "../components/SignupModal";
+import LoginModal from "../components/LoginModal";
+import AddTaskModal from "../components/AddTaskModal";
+import UpdateTaskModal from "../components/UpdateTaskModal";
 
 const Home = () => {
   const authCon = useAuth();
@@ -14,32 +18,16 @@ const Home = () => {
   const taskCon = useTask();
   initializeTask(taskCon);
 
-  console.log("updating task === ", taskCon.updatingTask);
-
-  const taskList = [
-    // "go to gym",
-    // "watch movie",
-    // "study",
-    // "go to gym",
-    // "watch movie",
-    // "go to gym",
-    // "watch movie",
-    // "go to gym",
-    // "watch movie",
-    // "go to gym",
-  ];
-
-  const handleEdit = () => {};
-
-  const handleDelete = () => {};
-
   useEffect(() => {
-    // initializeAuth(useAuth());
-    getAllTasks(authCon.user._id);
-  }, []);
+    if (authCon.user?._id) getAllTasks(authCon.user._id);
+  }, [authCon.user]);
 
   return (
     <div className=" ">
+      <SignupModal />
+      <LoginModal />
+      <AddTaskModal />
+      <UpdateTaskModal />
       <div className=" max-w-lg h-[540px]  mx-auto flex flex-col items-center mt-1 px-5 py-3  ">
         <button
           onClick={() =>
@@ -84,7 +72,9 @@ const Home = () => {
                           alt="edit icon"
                         />
                         <img
-                          onClick={handleDelete}
+                          onClick={() => {
+                            deleteTask(item._id, authCon.user.email);
+                          }}
                           title="delete task"
                           className="w-5 inline ml-3 cursor-pointer"
                           src={deleteIcon}

@@ -1,19 +1,21 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 
 const TaskContext = React.createContext();
 
 export const useTask = () => useContext(TaskContext);
 
 export const TaskProvider = ({ children }) => {
-  const [myTasks, setMyTasks] = useState([
-    { _id: 1001, title: "Task 1", body: "some body" },
-  ]);
+  const [myTasks, setMyTasks] = useState([]);
   const [updatingTask, setUpdatingTask] = useState({
     title: "test",
     body: "test",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({
+    code: 0,
+    message: "",
+    isActive: false,
+  });
 
   const values = {
     myTasks,

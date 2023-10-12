@@ -12,7 +12,6 @@ const LoginModal = () => {
   };
 
   const handleLogin = () => {
-    // alert(loginInfo.email + " ----- " + loginInfo.password);
     loginUser(loginInfo);
   };
 

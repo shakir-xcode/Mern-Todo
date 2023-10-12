@@ -14,30 +14,28 @@ export const createTask = ({ title, body, email }) => {
     .then((res) => {
       const { _id, title, body } = res.data;
       if (res.status === 200) {
-        // if 200
-        // save res data to context
-        // set message to 'Task Added'
-        taskStateManager.setMyTasks((pre) => [...pre, { _id, title, body }]);
-        taskStateManager.setMessage("Task Added");
+        taskStateManager.setMyTasks((pre) => [{ _id, title, body }, ...pre]);
+        taskStateManager.setMessage({
+          code: 200,
+          message: "Task Added",
+          isActive: true,
+        });
       } else {
-        // not 200
-        // set message to 'Something went wrong'
-        taskStateManager.setMessage("something went wrong");
+        taskStateManager.setMessage({
+          code: 400,
+          message: "something went wrong",
+          isActive: true,
+        });
       }
-
-      // console.log("status --- ", res.status);
-      // console.log("data ---- ", res.data);
     })
     .catch((err) => {
-      // set message to 'Something went wrong'
-      taskStateManager.setMessage("something went wrong");
-
-      // console.log(err);
-      // console.log("status --- ", err.response.request.status);
-      // console.log("data ---- ", err.response.data.message);
+      taskStateManager.setMessage({
+        code: 400,
+        message: "something went wrong",
+        isActive: true,
+      });
     })
     .finally(() => {
-      // set isLoading to false
       taskStateManager.setIsLoading(false);
     });
 };
@@ -49,63 +47,86 @@ export const getAllTasks = (id) => {
     .get(url)
     .then((res) => {
       if (res.status === 200) {
-        // if 200
-        // save res data to context
-
-        taskStateManager.setMyTasks(res.data);
-        // taskStateManager.setMessage("Task Added");
+        taskStateManager.setMyTasks(() => res.data);
       } else {
-        // not 200
-        // set message to 'Something went wrong'
-        taskStateManager.setMessage("something went wrong");
+        taskStateManager.setMessage({
+          code: 400,
+          message: "something went wrong",
+          isActive: true,
+        });
       }
-
-      // console.log("status --- ", res.status);
-      // console.log("data ---- ", res.data);
     })
     .catch((err) => {
-      // set message to 'Something went wrong'
-      taskStateManager.setMessage("something went wrong");
-
-      // console.log(err);
-      // console.log("status --- ", err.response.request.status);
-      // console.log("data ---- ", err.response.data.message);
+      taskStateManager.setMessage({
+        code: 400,
+        message: "something went wrong",
+        isActive: true,
+      });
     })
     .finally(() => {
-      // set isLoading to false
       taskStateManager.setIsLoading(false);
     });
 };
 
-export const updateTask = ({ id, title, body, email }) => {
+export const updateTask = ({ id, title, body, userId, email }) => {
   const url = `http://localhost:4000/list/updateTask/${id}`;
   taskStateManager.setIsLoading(true);
   axios
-    .put(url, { title, body, email })
+    .put(url, { title, body, userId, email })
     .then((res) => {
       if (res.status === 200) {
-        taskStateManager.setMessage(res.data.message);
+        taskStateManager.setMessage({
+          code: 200,
+          message: "Task Added",
+          isActive: true,
+        });
+        taskStateManager.setMyTasks([...res.data]);
       } else {
-        // not 200
-        // set message to 'Something went wrong'
-        taskStateManager.setMessage("something went wrong");
+        taskStateManager.setMessage({
+          code: 400,
+          message: "something went wrong",
+          isActive: true,
+        });
       }
-
-      // console.log("status --- ", res.status);
-      // console.log("data ---- ", res.data);
     })
     .catch((err) => {
-      // set message to 'Something went wrong'
-      taskStateManager.setMessage("something went wrong");
-
-      // console.log(err);
-      // console.log("status --- ", err.response.request.status);
-      // console.log("data ---- ", err.response.data.message);
+      taskStateManager.setMessage({
+        code: 400,
+        message: "something went wrong",
+        isActive: true,
+      });
     })
     .finally(() => {
-      // set isLoading to false
       taskStateManager.setIsLoading(false);
     });
 };
 
-export const deleteTask = () => {};
+export const deleteTask = (taskId, email) => {
+  const url = `http://localhost:4000/list/deleteTask/${taskId}`;
+  axios
+    .put(url, { email })
+    .then((res) => {
+      if (res.status === 200) {
+        const updatedList = deleteItem(taskId, taskStateManager.myTasks);
+        taskStateManager.setMyTasks(updatedList);
+      } else {
+        taskStateManager.setMessage({
+          code: 400,
+          message: res.data?.message,
+          isActive: true,
+        });
+      }
+    })
+    .catch((err) => {
+      taskStateManager.setMessage({
+        code: 400,
+        message: err.response.data?.message,
+        isActive: true,
+      });
+    });
+};
+
+const deleteItem = (id, list) => {
+  const newList = list.filter((item) => item._id !== id);
+  return newList;
+};

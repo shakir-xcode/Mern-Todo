@@ -7,13 +7,13 @@ export default function useAuth() {
 }
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({
-    _id: "6524c66f880bf9d5a0da06ed",
-    email: "new101@gmail.com",
-    username: "new101",
+  const [user, setUser] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [message, setMessage] = useState({
+    code: 0,
+    message: "",
+    isActive: false,
   });
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [message, setMessage] = useState("please wait");
   const [isLoading, setIsLoading] = useState(false);
 
   const value = {

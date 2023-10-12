@@ -23,11 +23,19 @@ export const signUpUser = (user) => {
       if (res.status === 201) {
         // console.log("here 1");
         authStateManager.setUser(res.data);
-        authStateManager.setMessage("successfully registered");
+        authStateManager.setMessage({
+          code: 200,
+          message: "successfully registered",
+          isActive: true,
+        });
         authStateManager.setIsLoggedIn(true);
       } else {
         // console.log("here 2");
-        authStateManager.setMessage("something went wrong");
+        authStateManager.setMessage({
+          code: 400,
+          message: "something went wrong",
+          isActive: true,
+        });
       }
       authStateManager.setIsLoading(false);
     })
@@ -35,9 +43,11 @@ export const signUpUser = (user) => {
       // console.log(err.response.status);
       // console.log(err);
       // errorCallback(err.response.data.message);
-      authStateManager.setMessage(
-        err.response?.data.message || "something went wrong"
-      );
+      authStateManager.setMessage({
+        code: 400,
+        message: err.response?.data.message || "something went wrong",
+        isActive: true,
+      });
       authStateManager.setIsLoading(false);
     });
 };
@@ -48,24 +58,29 @@ export const loginUser = (user) => {
   axios
     .post(url, user)
     .then((res) => {
-      // console.log(res.status);
-      // console.log(res.data);
       if (res.status === 200) {
-        // console.log("status --------- ", res.status);
         authStateManager.setUser(res.data);
         authStateManager.setIsLoggedIn(true);
-        authStateManager.setMessage("successfully logged In");
+        authStateManager.setMessage({
+          code: 200,
+          message: "successfully logged In",
+          isActive: true,
+        });
       } else {
-        // console.log("here 2");
-        authStateManager.setMessage("something went wrong");
+        authStateManager.setMessage({
+          code: 400,
+          message: "something went wrong",
+          isActive: true,
+        });
       }
       authStateManager.setIsLoading(false);
     })
     .catch((err) => {
-      // console.log(err.response.data.message);
-      authStateManager.setMessage(
-        err.response?.data.message || "something went wrong"
-      );
+      authStateManager.setMessage({
+        code: 400,
+        message: err.response?.data.message || "something went wrong",
+        isActive: true,
+      });
       authStateManager.setIsLoading(false);
     });
 };

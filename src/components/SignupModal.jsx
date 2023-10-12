@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { signUpUser } from "../api/authentication";
 
-const SignupModal = ({ toggleLoadingModal }) => {
+const SignupModal = () => {
   const [signUpInfo, setSignUpInfo] = useState({
     email: "",
     username: "",
@@ -12,19 +12,8 @@ const SignupModal = ({ toggleLoadingModal }) => {
     setSignUpInfo((pre) => ({ ...pre, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
-
   const handleSignup = () => {
-    // alert(JSON.stringify(signUpInfo));
-    // toggleLoadingModal();
     signUpUser(signUpInfo);
-    // setIsLoggedIn(true);
-    // setUser({
-    //   email: "abc@gamil.com",
-    //   username: "shakir_08",
-    // });
   };
 
   return (

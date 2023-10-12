@@ -1,12 +1,15 @@
-import React, { useContext } from "react";
+import React from "react";
 import useAuth from "../context/AuthContext";
+import { useTask } from "../context/TaskContext";
+import userProfile from "../assets/user_profile.png";
 
 const Navbar = () => {
   const { user, isLoggedIn, setUser, setIsLoggedIn } = useAuth();
-  // console.log(user);
+  const { setMyTasks } = useTask();
   const handleLogOut = () => {
     setIsLoggedIn(false);
     setUser(null);
+    setMyTasks([]);
   };
 
   return (
@@ -14,7 +17,7 @@ const Navbar = () => {
       <div className="flex-1 ml-3">
         <a className="  normal-case text-xl">Todo List</a>
       </div>
-      <div className="flex-none">
+      <div className="flex-none md:mr-10">
         <ul className="menu menu-horizontal px-1">
           {isLoggedIn ? (
             ""
@@ -51,10 +54,10 @@ const Navbar = () => {
         </ul>
       </div>
       {isLoggedIn ? (
-        <div>
+        <div className="md:mr-10">
           <div className="avatar">
             <div className="w-10 mx-3 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+              <img src={userProfile} alt="user profile" />
             </div>
           </div>
           <p className=" text-primary font-semibold">{user.username}</p>

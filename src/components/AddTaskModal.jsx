@@ -4,8 +4,6 @@ import useAuth from "../context/AuthContext";
 
 const AddTaskModal = () => {
   const { isLoggedIn, user } = useAuth();
-  // console.log("add task - user === ", user.email);
-  // console.log("add task - isLoggedIn === ", isLoggedIn);
 
   const [taskDetail, setTaskDetail] = useState({
     title: "",
@@ -16,11 +14,10 @@ const AddTaskModal = () => {
     setTaskDetail((pre) => ({ ...pre, [e.target.name]: e.target.value }));
   };
   const handleTaskCreation = () => {
-    // alert(taskDetail.title + " --- " + taskDetail.body);
-    console.log("HANDLING - user === ", taskDetail.email);
-
     if (isLoggedIn) createTask({ ...taskDetail, email: user.email });
-    else console.log("you must be logged in");
+    else {
+      // console.log("you must be logged in");
+    }
   };
 
   return (

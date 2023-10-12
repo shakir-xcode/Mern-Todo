@@ -6,10 +6,6 @@ import { useTask } from "../context/TaskContext";
 const UpdateTaskModal = () => {
   const { isLoggedIn, user } = useAuth();
   const taskCon = useTask();
-  //   console.log(useTask());
-  // const { title, body } = useTask().updatingTask;
-  // console.log("add task - user === ", user.email);
-  // console.log("add task - isLoggedIn === ", isLoggedIn);
 
   const [taskDetail, setTaskDetail] = useState({});
 
@@ -17,14 +13,17 @@ const UpdateTaskModal = () => {
     setTaskDetail((pre) => ({ ...pre, [e.target.name]: e.target.value }));
   };
   const handleTaskUpdation = () => {
-    if (isLoggedIn) updateTask({ ...taskDetail, email: user.email });
-    else console.log("you must be logged in");
+    if (isLoggedIn) {
+      updateTask({ ...taskDetail, userId: user._id, email: user.email });
+    } else {
+      // console.log("you must be logged in");
+    }
   };
 
   useEffect(() => {
-    const { title, body } = taskCon.updatingTask;
-    setTaskDetail({ title, body });
-  }, taskCon.updatingTask);
+    const { id, title, body } = taskCon.updatingTask;
+    setTaskDetail({ id, title, body });
+  }, [taskCon.updatingTask]);
 
   return (
     <dialog id="my_modal_updateTask" className={` modal modal-middle`}>
